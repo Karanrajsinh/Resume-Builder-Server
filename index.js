@@ -27,9 +27,9 @@ app.post('/generatePdf', async (req, res) => {
         const browser = await puppeteer.launch();
 
         const page = await browser.newPage();
-        await page.addStyleTag({ path: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' });
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        await page.addStyleTag({ path: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' });
 
         // Inject CSS for page size and margins using the received dimensions
         await page.addStyleTag({
