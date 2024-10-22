@@ -83,7 +83,7 @@ app.post('/generatePdf', async (req, res) => {
 
         // Inject CSS for page size and margins using the received dimensions
         await page.addStyleTag({
-            content: `@page { size: ${width}px ${height}px; margin: 0; } body { margin: 0; }`,
+            content: `@page { size: ${width}px ${height}px; }`,
         });
 
         // Generate PDF using the received dimensions
