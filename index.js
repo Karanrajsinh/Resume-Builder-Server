@@ -51,7 +51,7 @@ const puppeteer = require('puppeteer-core'); // Use puppeteer-core
 const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chromium binary
 const app = express();
 
-app.use(cors()); // Enable CORS
+app.use(cors({ origin: "*" })); // Enable CORS
 app.use(express.json()); // Parse JSON request bodies
 
 app.post('/generatePdf', async (req, res) => {
