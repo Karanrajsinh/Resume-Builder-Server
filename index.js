@@ -72,10 +72,10 @@ app.post('/generatePdf', async (req, res) => {
 
         // Dynamically calculate the content size (width and height)
         const { width, height } = await page.evaluate(() => {
-
+            const body = document.body;
             return {
-                width: htmlContent.offsetWidth,
-                height: htmlContent.offsetHeight,
+                width: body.scrollWidth,
+                height: body.scrollHeight,
             };
         });
 
