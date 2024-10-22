@@ -11,7 +11,13 @@ app.post('/generatePdf', async (req, res) => {
     const { htmlContent } = req.body;
 
     try {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            args: [
+                '--no-sandbox', // Required for environments like Heroku/Render
+                '--disable-setuid-sandbox',
+            ],
+            headless: true, // Ensure Puppeteer runs in headless mode
+        });
         const page = await browser.newPage();
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
@@ -33,7 +39,7 @@ app.post('/generatePdf', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
