@@ -1,23 +1,23 @@
 // const express = require('express');
 // const cors = require('cors');
-// const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer-core'); // Use puppeteer-core
+// const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chromium binary
 // const app = express();
 
-// app.use(cors()); // Enable CORS
-// app.use(express.json());
+// app.use(cors({ origin: "*" })); // Enable CORS
+// app.use(express.json()); // Parse JSON request bodies
 
-// // PDF Generation Route (same as before)
 // app.post('/generatePdf', async (req, res) => {
 //     const { htmlContent } = req.body;
 
 //     try {
+//         // Launch Puppeteer using chrome-aws-lambda binaries
 //         const browser = await puppeteer.launch({
-//             args: [
-//                 '--no-sandbox', // Required for environments like Heroku/Render
-//                 '--disable-setuid-sandbox',
-//             ],
-//             headless: true, // Ensure Puppeteer runs in headless mode
+//             args: [...chromium.args],
+//             executablePath: await chromium.executablePath,
+//             headless: true,
 //         });
+
 //         const page = await browser.newPage();
 //         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
@@ -39,12 +39,10 @@
 //     }
 // });
 
-// const PORT = 3000;
+// const PORT = process.env.PORT || 3000;
 // app.listen(PORT, () => {
 //     console.log(`Server running on port ${PORT}`);
 // });
-
-
 const express = require('express');
 const cors = require('cors');
 const puppeteer = require('puppeteer-core'); // Use puppeteer-core
@@ -68,13 +66,34 @@ app.post('/generatePdf', async (req, res) => {
         const page = await browser.newPage();
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
+        // Dynamically calculate the content size (width and height)
+        const { width, height } = await page.evaluate(() => {
+            const pdfElement = document.getElementById('pdf'); // Ensure 'pdf' element exists in the HTML content
+            if (!pdfElement) {
+                throw new Error('Could not find element with ID "pdf"');
+            }
+            return {
+                width: pdfElement.offsetWidth,
+                height: pdfElement.offsetHeight,
+            };
+        });
+
+        // Inject dynamic CSS for page size and margins
+        await page.addStyleTag({
+            content: `@page { size: ${width}px ${height}px; margin: 0; padding: 0; } body { margin: 0; padding: 0; }`,
+        });
+
+        // Generate PDF with dynamic width and height
         const pdfBuffer = await page.pdf({
-            format: 'A4',
             printBackground: true,
+            margin: 0, // No margins
+            width: `${width}px`, // Dynamically calculated width
+            height: `${height}px`, // Dynamically calculated height
         });
 
         await browser.close();
 
+        // Set the response headers and send the generated PDF
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'attachment; filename=document.pdf',
