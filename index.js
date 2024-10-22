@@ -72,13 +72,10 @@ app.post('/generatePdf', async (req, res) => {
 
         // Dynamically calculate the content size (width and height)
         const { width, height } = await page.evaluate(() => {
-            const pdfElement = document.getElementById('pdf'); // Ensure 'pdf' element exists in the HTML content
-            if (!pdfElement) {
-                throw new Error('Could not find element with ID "pdf"');
-            }
+
             return {
-                width: pdfElement.offsetWidth,
-                height: pdfElement.offsetHeight,
+                width: htmlContent.offsetWidth,
+                height: htmlContent.offsetHeight,
             };
         });
 
