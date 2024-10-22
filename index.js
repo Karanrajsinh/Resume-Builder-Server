@@ -50,12 +50,12 @@ const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chro
 const app = express();
 const bodyParser = require('body-parser');
 
-app.use(cors({ origin: "*" })); // Enable CORS
-app.use(express.json()); // Parse JSON request bodies
+
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
-
+app.use(cors({ origin: "*" })); // Enable CORS
+app.use(express.json()); // Parse JSON request bodies
 app.post('/generatePdf', async (req, res) => {
     const { htmlContent } = req.body;
 
