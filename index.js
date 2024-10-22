@@ -62,7 +62,7 @@ app.post('/generatePdf', async (req, res) => {
         const browser = await puppeteer.launch({
             args: [...chromium.args],
             executablePath: await chromium.executablePath,
-            headless: chromium.headless,
+            headless: true,
         });
 
         const page = await browser.newPage();
