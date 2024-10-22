@@ -1,11 +1,12 @@
-// server.js
 const express = require('express');
+const cors = require('cors');
 const puppeteer = require('puppeteer');
 const app = express();
 
-app.use(express.json()); // To parse JSON requests
+app.use(cors()); // Enable CORS
+app.use(express.json());
 
-// PDF Generation Route
+// PDF Generation Route (same as before)
 app.post('/generatePdf', async (req, res) => {
     const { htmlContent } = req.body;
 
@@ -21,7 +22,6 @@ app.post('/generatePdf', async (req, res) => {
 
         await browser.close();
 
-        // Send the PDF as a response
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'attachment; filename=document.pdf',
