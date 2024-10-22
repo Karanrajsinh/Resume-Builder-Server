@@ -1,3 +1,19 @@
+
+const express = require('express');
+const cors = require('cors');
+const puppeteer = require('puppeteer-core'); // Use puppeteer-core
+const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chromium binary
+const app = express();
+const bodyParser = require('body-parser');
+
+
+
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
+app.use(cors({ origin: "*" })); // Enable CORS
+app.use(express.json()); // Parse JSON request bodies
+
+
 app.post('/generatePdf', async (req, res) => {
     const { htmlContent, width, height } = req.body;
 
@@ -12,6 +28,7 @@ app.post('/generatePdf', async (req, res) => {
 
         const page = await browser.newPage();
         await page.addStyleTag({ path: 'https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css' });
+
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
         // Inject CSS for page size and margins using the received dimensions
