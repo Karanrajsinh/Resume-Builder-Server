@@ -74,8 +74,8 @@ app.post('/generatePdf', async (req, res) => {
         const { width, height } = await page.evaluate(() => {
             const body = document.body;
             return {
-                width: body.scrollWidth,
-                height: body.scrollHeight,
+                width: body.offsetWidth,
+                height: body.offsetHeight,
             };
         });
 
