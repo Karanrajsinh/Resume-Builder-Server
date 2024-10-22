@@ -72,23 +72,20 @@ app.post('/generatePdf', async (req, res) => {
     }
 
     try {
-        const browser = await puppeteer.launch({
-            args: [...chromium.args],
-            executablePath: await chromium.executablePath,
-            headless: true,
-        });
+        const browser = await puppeteer.launch();
 
         const page = await browser.newPage();
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
         // Inject CSS for page size and margins using the received dimensions
         await page.addStyleTag({
-            content: `@page { size: ${width}px ${height}px; }`,
+            content: `@page { size: ${width}px ${height}px; margin: 0; padding: 0; } body { margin: 0; padding: 0; }`,
         });
 
         // Generate PDF using the received dimensions
         const pdfBuffer = await page.pdf({
             printBackground: true,
+            margin: 0,
             width: `${width}px`, // Use the received width
             height: `${height}px`, // Use the received height
         });
