@@ -1,12 +1,10 @@
 
 const express = require('express');
-const fs = require('fs');
 const cors = require('cors');
 const puppeteer = require('puppeteer'); // Use puppeteer-core
 // const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chromium binary
 const app = express();
 const bodyParser = require('body-parser');
-const path = require('path');
 
 
 app.use(bodyParser.json({ limit: '100mb' }));
@@ -24,8 +22,6 @@ app.post('/generatePdf', async (req, res) => {
         return res.status(400).send('HTML content, width, or height not provided');
     }
 
-    const cssFilePath = path.join(__dirname, 'style.css');
-    const cssContent = fs.readFileSync(cssFilePath, 'utf8');
 
     try {
         const browser = await puppeteer.launch();
@@ -33,7 +29,6 @@ app.post('/generatePdf', async (req, res) => {
         const page = await browser.newPage();
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-        await page.addStyleTag({ content: cssContent });
         // Inject CSS for page size and margins using the received dimensions
         await page.addStyleTag({
             content: `@page { size: ${width}px ${height}px; margin: 0; padding: 0; } body { margin: 0; padding: 0; }`,
