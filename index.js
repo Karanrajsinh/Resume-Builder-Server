@@ -2,7 +2,7 @@
 const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
-const puppeteer = require('puppeteer-core'); // Use puppeteer-core
+const puppeteer = require('puppeteer'); // Use puppeteer-core
 // const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chromium binary
 const app = express();
 const bodyParser = require('body-parser');
