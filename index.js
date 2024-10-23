@@ -24,8 +24,8 @@ app.post('/generatePdf', async (req, res) => {
 
 
     try {
-        const browser = await puppeteer.launch({ headless: true, executablePath: "/opt/render/project/src/.cache/puppeteer/chrome/linux-130.0.6723.58" });
-
+        // const browser = await puppeteer.launch({ headless: true, executablePath: "/opt/render/project/src/.cache/puppeteer/chrome/linux-130.0.6723.58" });
+        const browser = await puppeteer.launch();
         const page = await browser.newPage();
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
