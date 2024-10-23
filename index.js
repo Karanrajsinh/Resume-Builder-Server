@@ -26,7 +26,7 @@ app.post('/generatePdf', async (req, res) => {
 
     try {
         // const browser = await puppeteer.launch({ headless: true, executablePath: "/opt/render/project/src/.cache/puppeteer/chrome/linux-130.0.6723.58" });
-        const browser = await puppeteer.launch({ headless: true, args: ['--disable-gpu'] });
+        const browser = await puppeteer.launch({ headless: true, args: ['--no- sandbox', '--disable-gpu'] });
         const page = await browser.newPage();
         await page.setContent(htmlContent, { waitUntil: ['domcontentloaded', 'networkidle0'] });
         // Inject CSS for page size and margins using the received dimensions
