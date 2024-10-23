@@ -36,7 +36,7 @@ app.post('/generatePdf', async (req, res) => {
 
         // Generate PDF using the received dimensions
         const pdfBuffer = await page.pdf({
-            printBackground: true,
+            printBackground: false,
             margin: 0,
             width: `${width}px`, // Use the received width
             height: `${height}px`, // Use the received height
