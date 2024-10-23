@@ -7,8 +7,8 @@ const app = express();
 const bodyParser = require('body-parser');
 
 
-app.use(bodyParser.json({ limit: '100mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cors({ origin: "*" })); // Enable CORS
 app.use(express.json()); // Parse JSON request bodies
 
@@ -25,7 +25,7 @@ app.post('/generatePdf', async (req, res) => {
 
     try {
         // const browser = await puppeteer.launch({ headless: true, executablePath: "/opt/render/project/src/.cache/puppeteer/chrome/linux-130.0.6723.58" });
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({ headless: true });
         const page = await browser.newPage();
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
