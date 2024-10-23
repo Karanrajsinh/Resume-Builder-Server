@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer-core'); // Use puppeteer-core
 // const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chromium binary
 const app = express();
 const bodyParser = require('body-parser');
-
+const path = require('path');
 
 
 app.use(bodyParser.json({ limit: '100mb' }));
