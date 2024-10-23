@@ -1,14 +1,15 @@
 
 const express = require('express');
 const cors = require('cors');
-const puppeteer = require('puppeteer'); // Use puppeteer-core
+const puppeteer = require('puppeteer-core'); // Use puppeteer-core
 // const chromium = require('chrome-aws-lambda'); // Use chrome-aws-lambda for Chromium binary
 const app = express();
 const bodyParser = require('body-parser');
 
 
-app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '100mb' }));
 app.use(cors({ origin: "*" })); // Enable CORS
 app.use(express.json()); // Parse JSON request bodies
 
@@ -25,18 +26,17 @@ app.post('/generatePdf', async (req, res) => {
 
     try {
         // const browser = await puppeteer.launch({ headless: true, executablePath: "/opt/render/project/src/.cache/puppeteer/chrome/linux-130.0.6723.58" });
-        const browser = await puppeteer.launch({ headless: true });
+        const browser = await puppeteer.launch({ headless: true, args: ['--disable-gpu'] });
         const page = await browser.newPage();
-
-        await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+        await page.setContent(htmlContent, { waitUntil: ['domcontentloaded', 'networkidle0'] });
         // Inject CSS for page size and margins using the received dimensions
         await page.addStyleTag({
-            content: `@page { size: ${width}px ${height}px; margin: 0; padding: 0; } body { margin: 0; padding: 0; }`,
+            content: `@page { size: ${width}px ${height}px; margin: 0; padding: 0; } body { margin: 0; padding: 0; } div:last-of-type { margin-bottom: -2px; }`,
         });
 
         // Generate PDF using the received dimensions
         const pdfBuffer = await page.pdf({
-            printBackground: false,
+            printBackground: true,
             margin: 0,
             width: `${width}px`, // Use the received width
             height: `${height}px`, // Use the received height
@@ -55,7 +55,7 @@ app.post('/generatePdf', async (req, res) => {
     }
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
