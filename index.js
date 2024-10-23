@@ -23,6 +23,8 @@ app.post('/generatePdf', async (req, res) => {
         return res.status(400).send('HTML content, width, or height not provided');
     }
 
+    app.use('/styles', express.static(path.join(__dirname, 'style.css')));
+
     try {
         const browser = await puppeteer.launch();
 
